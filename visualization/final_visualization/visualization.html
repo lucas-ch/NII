@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+	<head>
+
+<style>
+
+div#supperwrapper {
+	width:3000px;
+	height:5300px;
+}
+
+div#wrapper {
+}
+
+div#col_name {
+	float:left;
+	width:7%;
+	}
+	
+div#col_type {
+	float:left;
+	width:7%;
+	}
+	
+div#col_score {
+	float:left;
+	width:12%;
+	}
+
+div#col_image {
+	float:left;
+	width:25%;
+	}
+	
+div#col_places {
+	float:left;
+	width:20%;
+	}
+
+div#col_button_img_up {
+	float:left;
+	width:2%;
+	}
+
+div#col_button_img_back {
+	float:left;
+	width:2%;
+	}
+
+div#col_button_places {
+	float:left;
+	width:1%;
+	}	
+	
+div#tweet {
+	float:left;
+	width:24%;
+	height:100%;
+  background-color:white;
+
+	}
+	
+div#corps {
+	float:left;
+	width:100%;
+  background-color:white;
+
+	}
+
+div.title {
+	width:100px;
+	height:100px;
+	x:0;
+	y:100px;
+	font-size:14px;
+	font-family:  Helvetica;
+	}
+
+div.row_name {
+	height:50px;
+	font-size:14px;
+	font-family:  Helvetica;
+
+	}
+
+div.row_type {
+	height:50px;
+	font-size:14px;
+	font-family:  Helvetica;
+	}
+
+div.row_score {
+	height:50px;
+	}
+	
+svg.svg_score {
+	height:50px;
+	font-size:14px;
+	font-family:  Helvetica;
+	}
+
+div.row_image {
+	height:50px;
+	font-size:14px;
+	font-family:  Helvetica;
+	}
+	
+div.row_button {
+	height:50px;
+	font-size:14px;
+	font-family:  Helvetica;
+	}
+
+svg.svg_image {
+	height:50px;
+	}
+
+div.row_places {
+	height:50px;
+	font-size:14px;
+	font-family:  Helvetica;
+	}
+
+.dropdown {
+}
+
+a {
+  color: black;
+}
+
+.dropdown dd,
+.dropdown dt {
+  margin: 0px;
+  padding: 0px;
+}
+
+.dropdown ul {
+  margin: -1px 0 0 0;
+}
+
+.dropdown dd {
+  position: relative;
+}
+
+.dropdown a,
+.dropdown a:visited {
+  text-decoration: none;
+  outline: none;
+	font-size:14px;
+	font-family:  Helvetica;
+}
+
+.dropdown dt a {
+  display: block;
+  overflow: hidden;
+  border: 0;
+  width: 100px;
+}
+
+.dropdown dt a span,
+.multiSel span {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.dropdown dd ul {
+  border: 0;
+  display: none;
+  left: 0px;
+  padding: 2px 15px 2px 5px;
+  position: absolute;
+  width: 130px;
+  list-style: none;
+  height: 200px;
+  overflow: auto;
+  background-color:white;
+
+}
+
+.dropdown span.value {
+  display: none;
+}
+
+.dropdown dd ul li a {
+  display: block;
+}
+
+button {
+  width: 70px;
+  border: 0;
+  padding: 10px 0;
+  margin: 5px 0;
+  text-align: center;
+	font-size:14px;
+	font-family:  Helvetica;
+}
+
+button.img_but {
+  width: 30px;
+  border: 0;
+  padding: 10px 0;
+  margin: 5px 0;
+  text-align:left;
+	font-size:10px;
+	font-family:  Helvetica;
+	background-color: blue;
+}
+
+button.places_but {
+  width: 10px;
+  border: 0;
+  padding: 10px 0;
+  margin: 5px 0;
+  text-align:left;
+	font-size:10px;
+	font-family:  Helvetica;
+	background-color: blue;
+}
+
+#geo{
+	color:blue;
+	}
+#pic{
+	color:orange;
+	}
+#text{
+	color:black;
+	}
+#pop{
+	color:green;
+	}
+	
+	
+div#top {
+	float:left;
+	width:6000px;
+	height:100px;
+	}
+
+div#col_tweets_user {
+	float:left;
+	width:320px;
+	height:1000px;
+	overflow:scroll;
+	margin-right:20px
+	}
+
+div#user_stats {
+	position: relative;
+	float:left;
+	width:2000px;
+	height:5000px;
+	}
+
+div#user_text {
+	float:left;
+	height:300px;
+	}
+
+div#user_svg {
+	float:left;
+	width:300px;
+	height:300px;
+	margin-right:20px
+	}
+
+div#user_desc {
+	float:left;
+	width:300px;
+	height:150px;
+	}
+	
+</style>
+
+	<script src="//d3js.org/d3.v4.min.js"></script>
+	<script sync src="https://platform.twitter.com/widgets.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14082/FileSaver.js"></script>
+    <script src="jquery.js"></script>
+
+	</head>
+	
+	<body>
+		choose dataset<input id='dataset' type="text" size="7" onkeypress="upd_dataset(event)"/>
+		number of users to display<input id='thres' type="text" size="7" onkeypress="upd_thres(event)"/>
+
+		<div id="wrapper">
+			
+			<div id="col_name">
+				<div class ="title">
+					<dl class="dropdown" id="name_dd"> 
+	  
+						<dt>
+						<a href="#">
+						  <span class="hida">Name</span>    
+						  <p class="multiSel"></p>  
+						</a>
+						</dt>
+					  
+						<dd>
+							<div class="mutliSelect">
+								<ul>
+									<li>
+										filter by text <input id='name_in' type="text" size="7" /></li>
+								</ul>
+							</div>
+						</dd>
+					  <button>Filter</button>
+					</dl>
+
+				
+				</div>
+			</div>
+			
+			<div id="col_type">
+				<div class ="title">
+					<dl class="dropdown" id="type_dd"> 
+	  
+						<dt>
+						<a href="#">
+						  <span class="hida">Type</span>    
+						  <p class="multiSel"></p>  
+						</a>
+						</dt>
+					  
+						<dd>
+							<div class="mutliSelect">
+								<ul>
+									<li>
+										<input type="checkbox" value="journal"  />Journal</li>
+									<li>
+										<input type="checkbox" value="journalist" />Journalist</li>
+									<li>
+										<input type="checkbox" value="orga" />Orga</li>
+									<li>
+										<input type="checkbox" value="orguser" />Orga user</li>
+									<li>
+										<input type="checkbox" value="other" />other</li>
+									<li>
+										filter by text <input id='clust_in' type="text" size="7" /></li>
+								</ul>
+							</div>
+						</dd>
+					  <button>Filter</button>
+					</dl>
+				
+				</div>
+			</div>
+			
+			
+			
+			<div id="col_score">
+				<div class ="title">
+							<dl class="dropdown" id="score_dd"> 
+	  
+						<dt>
+						<a href="#">
+						  <span class="hida">Score</span>    
+						  <p class="multiSel"></p>  
+						</a>
+						</dt>
+					  
+						<dd>
+							<div class="mutliSelect">
+								<ul>Select coefficients for attributes 
+									<li>
+										<input id='geo' type="text" size="2"/>geography</li>
+									<li>
+										<input id='pic' type="text"  size="2"/>picture</li>
+									<li>
+										<input id='text' type="text"  size="2"/>text</li>
+									<li>
+										<input id='pop' type="text" size="2" />popularity</li>
+								</ul>
+							</div>
+						</dd>
+					  <button>Compute</button>
+					</dl>
+
+				
+				
+				</div>
+			</div>
+
+
+			<div id="col_button_img_back">
+							<div class ="title" style="margin-top:14px">
+							</div>
+			</div>
+			
+
+			<div id="col_image">
+				<div class ="title">
+							<dl class="dropdown" id="image_dd"> 
+						<dt>
+						<a href="#">
+						  <span class="hida">Images</span>    
+						  <p class="multiSel"></p>  
+						</a>
+						</dt>
+					  
+						<dd>
+							<div class="mutliSelect">
+								<ul>
+									<li>
+										<input type="checkbox" />out</li>
+									<li>
+										<input type="checkbox" />in</li>
+									<li>
+										<input type="checkbox"  />graph</li>
+									<li>
+										<input type="checkbox" />tv</li>
+									<li>
+										<input type="checkbox" />other</li>
+									<li>
+										img nb <input id='nb_img' type="text" size="7"/></li>
+									<li>
+										show vids only<input id='vids' type="checkbox" /></li>
+			
+								</ul>
+							</div>
+						</dd>
+					  <button>Filter</button>
+					</dl>
+
+				
+				
+				</div>		
+			</div>
+			
+
+			<div id="col_button_img_up">
+							<div class ="title" style="margin-top:14px">
+							</div>
+
+			</div>
+
+
+				<div id="col_places">
+				<div class ="title">
+					<dl class="dropdown" id="places_dd"> 
+	  
+						<dt>
+						<a href="#">
+						  <span class="hida">Places</span>    
+						  <p class="multiSel"></p>  
+						</a>
+						</dt>
+					  
+						<dd>
+							<div class="mutliSelect">
+								<ul>
+									<li>filter place<input type="text" size="10"/></li>
+									
+									<li>
+										<input id="places_f_b" type="checkbox"/>filter out pics</li>
+
+								<ul/>
+							</div>
+						</dd>
+					  <button>Filter</button>
+					</dl>
+				
+				</div>
+			</div>
+			
+			
+			<div id="col_button_places">
+							<div class ="title" style="margin-top:14px">
+							</div>
+
+			</div>		
+			
+			<div id="tweet">
+				<div class="title" style="margin-top:14px">Tweet
+				
+				</div>
+				<div id="corps"
+					style="margin-left:10px;margin-top:0px"></div>
+			</div>
+	
+	<script>
+
+var divClone = $("body").clone();
+
+var wrapperClone = $("#wrapper").clone();
+
+/*
+initialization of variables
+*/
+
+dataset = 'grenfell'
+
+
+current_array_type = ['journal','journalist','orga','orguser','other']
+current_name_tofilter=[]
+current_cluster_tofilter=[]
+current_array_pic_coeff = [1,1,0,0,0]
+current_array_score = [100,100,0,0]
+current_threshold = 5
+current_places_tofilter = []
+current_filter_pic_place = true	
+current_nb_img = [0,10000]	
+current_vids =false	
+
+draw_vis(dataset)
+
+/*
+load of file and draw visualization
+*/
+
+function draw_vis(dataset){
+
+filenode = 	"final_json_file_piconly2_"+dataset+".json"	
+filelink =  "final_links_"+dataset+".json"
+fileuser =  "user_data_"+dataset+".json"
+
+d3.json(filenode, function(error, data) {
+	console.log(filenode)
+	if (error) throw error;
+	data_ori = data.slice()
+	hop()
+	
+	array_score = get_array_score(data_ori,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)
+	bar_construct2(array_score,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)	
+
+height = $('#col_name').height()
+
+$('#corps').height(height)
+
+	d3.json(filelink, function(error, data_link) {
+		if (error) throw error;	
+						});
+			})
+		}
+			
+/*
+function to compute score depending on parameters
+*/
+
+	function get_array_score(data,name_to_filter,array_type,cluster_to_filter,array_coeff,array_pic_coeff,nb_img_user,vids,threshold,array_places_tofilter,filter_pic_place){
+		
+					var datafilter = data.slice()
+
+		
+			for(var i=0; i<datafilter.length; i++){
+				datafilter[i].nbtweet = (datafilter[i].tweet).length
+			}
+
+			for(var i=0; i<datafilter.length; i++){
+				
+				if(vids==true){
+					datafilter[i].tweet = (datafilter[i].tweet).filter(function(d){return d[1].indexOf("video") >= 0})
+				}
+
+				if ((array_places_tofilter.length >0) && ([""," "].includes(array_places_tofilter[0]) == false)){
+					
+					var txt_pl = datafilter[i].tweet.map(function(e){return (e[3])})
+								
+					var txt2_pl = [].concat.apply([], txt_pl);
+								
+					datafilter[i].tweet_places=[]
+
+							for (var j = 0; j < txt2_pl.length; j++) 
+							{
+									place_name = txt2_pl[j]
+									
+									datafilter[i].tweet_places.push(place_name)	
+							}
+							
+
+				if(filter_pic_place == true){
+
+					datafilter[i].tweet = (datafilter[i].tweet).filter(function(d){return findone(d[3],array_places_tofilter)})
+						}
+
+
+					}
+
+				datafilter[i].value_pic_out= 2*datafilter[i].tweet.filter(function(d){return d[2]=='outdoors'}).length+
+													Math.min(datafilter[i].tweet.filter(function(d){return d[2]=='outdoors'}).length/datafilter[i].nbtweet)+0.1
+
+				datafilter[i].value_pic_in= 2*datafilter[i].tweet.filter(function(d){return d[2]=='indoors'}).length+
+													Math.min(datafilter[i].tweet.filter(function(d){return d[2]=='indoors'}).length/datafilter[i].nbtweet)+0.1
+
+				datafilter[i].value_pic_gr= 2*datafilter[i].tweet.filter(function(d){return d[2]=='graph'}).length+
+													Math.min(datafilter[i].tweet.filter(function(d){return d[2]=='graph'}).length/datafilter[i].nbtweet)+0.1
+													
+				datafilter[i].value_pic_tv= 2*datafilter[i].tweet.filter(function(d){return d[2]=='tv'}).length+
+													Math.min(datafilter[i].tweet.filter(function(d){return d[2]=='tv'}).length/datafilter[i].nbtweet)+0.1
+
+				datafilter[i].value_pic_oth= 2*datafilter[i].tweet.filter(function(d){return d[2]=='other'}).length+
+													Math.min(datafilter[i].tweet.filter(function(d){return d[2]=='other'}).length/datafilter[i].nbtweet)+0.1
+
+				}
+
+
+			array_value_pic=[]	
+			array_value_geo=[]	
+			array_value_text=[]	
+			array_value_pop=[]	
+			
+				for (var i=0; i<datafilter.length; i++) {
+					datafilter[i].value_pic = (datafilter[i].value_pic_out*array_pic_coeff[0]+datafilter[i].value_pic_in*array_pic_coeff[1]+datafilter[i].value_pic_gr*array_pic_coeff[2]
+					+datafilter[i].value_pic_tv*array_pic_coeff[3]+datafilter[i].value_pic_oth*array_pic_coeff[4])
+					
+					array_value_pic.push(datafilter[i].value_pic || 0)
+					array_value_geo.push(datafilter[i].value_geo || 0)
+					array_value_text.push(datafilter[i].value_text || 0)
+					array_value_pop.push(datafilter[i].value_pop || 0)
+					}	
+								
+			maxi_pic = 	Math.max.apply(null, array_value_pic);	
+			min_pic = 	Math.min.apply(null, array_value_pic);	
+			norm_pic  = d3.scaleLog()
+				.domain([min_pic, maxi_pic])
+				.range([0, 1]);	
+
+			maxi_geo = 	Math.max.apply(null, array_value_geo);	
+			min_geo = 	Math.min.apply(null, array_value_geo);	
+			norm_geo  = d3.scaleLinear()
+				.domain([min_geo, maxi_geo])
+				.range([0, 1]);	
+				
+			maxi_text= 	Math.max.apply(null, array_value_text);
+			min_text = 	Math.min.apply(null, array_value_text);		
+			norm_text  = d3.scaleLinear()
+				.domain([min_text, maxi_text])
+				.range([0, 1]);		
+							
+			maxi_pop = 	Math.max.apply(null, array_value_pop);	
+			min_pop = 	Math.min.apply(null, array_value_pop);	
+			norm_pop  = d3.scaleLinear()
+				.domain([min_pop, maxi_pop])
+				.range([0, 1]);	
+				
+			for (var i=0; i<datafilter.length; i++) {
+				datafilter[i].value_pic = norm_pic(datafilter[i].value_pic)	
+				datafilter[i].value_geo = norm_geo(datafilter[i].value_geo)	
+				datafilter[i].value_text = norm_text(datafilter[i].value_text)	
+				datafilter[i].value_pop = norm_pop(datafilter[i].value_pop)	
+				}				
+						
+			array_value_tot=[]
+	
+			for (var i=0; i<datafilter.length; i++) {	
+				array_value_tot.push
+				((datafilter[i].value_geo*array_coeff[0] +datafilter[i].value_pic*array_coeff[1] +datafilter[i].value_text*array_coeff[2]+ datafilter[i].value_pop*array_coeff[3])||0)		
+				}
+			
+			maxi_tot = 	Math.max.apply(null, array_value_tot);	
+			reajust_tot  = d3.scaleLinear()
+				.domain([0, maxi_tot])
+				.range([0, 150]);	
+			
+			reajust_tot2  = d3.scaleLinear()
+				.domain([0, maxi_tot])
+				.range([0, 1]);	
+
+
+			array_nb_pic = []
+				
+			for (var i=0; i<datafilter.length; i++) {
+				datafilter[i].value_geo = reajust_tot(datafilter[i].value_geo*array_coeff[0])	
+				datafilter[i].value_pic = reajust_tot(datafilter[i].value_pic*array_coeff[1])	
+				datafilter[i].value_text = reajust_tot(datafilter[i].value_text*array_coeff[2])	
+				datafilter[i].value_pop = reajust_tot(datafilter[i].value_pop*array_coeff[3])	
+				array_value_tot[i]= reajust_tot2(array_value_tot[i])	
+
+				}	
+				console.log(array_value_tot.sort(function(a,b){return b-a}).slice(0,2000))
+
+			dd=array_value_tot.sort(function(a,b){return b-a}).slice(0,100)
+			for (var i=0; i<datafilter.length; i++) {
+				datafilter[i].value_geo = datafilter[i].value_geo || 0
+				datafilter[i].value_pic = datafilter[i].value_pic ||0
+				datafilter[i].value_text = datafilter[i].value_text  || 0
+				datafilter[i].value_pop = datafilter[i].value_pop ||0
+
+				}	
+				
+			for(var i=0; i<datafilter.length; i++){
+				
+				datafilter[i].nb_img=[]
+
+				datafilter[i].nb_img = datafilter[i].tweet.filter(filter_pic2).length
+				
+				}
+
+			return datafilter
+		
+		
+		
+		}
+
+/*
+function to draw bar char visualisation
+*/
+		
+	function bar_construct2(datafilter,name_to_filter,array_type,cluster_to_filter,array_coeff,array_pic_coeff,nb_img_user,vids,threshold,array_places_tofilter,filter_pic_place){
+			datafilter = datafilter.sort(function (d1,d2)
+			{return (d2.value_geo+d2.value_pic+d2.value_text+d2.value_pop)-
+				(d1.value_geo+d1.value_pic+d1.value_text+d1.value_pop)})
+
+			if ((name_to_filter.length >0) && ([""," "].includes(name_to_filter[0]) == false)){
+				datafilter = datafilter.filter(function(d){return name_to_filter.includes(d.name) })
+			}
+			
+			if ((cluster_to_filter.length >0) && ([""," "].includes(cluster_to_filter[0]) == false)){
+				datafilter = datafilter.filter(function(d){return cluster_to_filter.includes(d.parentname) })
+			}
+
+			datafilter = datafilter.filter(function(d){return  array_type.includes(d.type)})
+
+			datafilter = datafilter.filter(function(d,i){return d.nb_img>(parseInt(nb_img_user[0])-1) && d.nb_img<(parseInt(nb_img_user[1])+1)})					
+
+			if ((array_places_tofilter.length >0) && ([""," "].includes(array_places_tofilter[0]) == false)){
+
+				datafilter = datafilter.filter(function(d){return findone(d.tweet_places,array_places_tofilter)})
+			}
+
+			vb=datafilter.map(function (d){return d.value_pic/150}).slice(0,2000)
+			vn=datafilter.map(function (d){return d.value_geo/150}).slice(0,2000)
+
+			datafilter = datafilter.slice(0,threshold)		
+			for (var i=0; i<datafilter.length; i++) {	
+
+				array_nb_pic.push((datafilter[i].tweet.filter(function(d){return d[1]!='0'})).length)
+			}
+
+			display_bar_ind(datafilter)
+		}
+
+
+
+/*
+display individual
+*/
+
+	function indiv_display(file,user_id){
+		
+		current_threshold=1000
+		document.body.innerHTML = '';
+
+		var supperwrapper = document.createElement("div");
+		supperwrapper.id = 'supperwrapper'
+
+		var wrapper = document.createElement("div");
+		wrapper.id = 'wrapper'
+
+		var top = document.createElement("div");
+		top.id = 'top'
+		
+		var user_stats_div = document.createElement("div");
+		user_stats_div.id = 'user_stats'
+		
+		var user_svg_div = document.createElement("div");
+		user_svg_div.id = 'user_svg'
+
+		var user_text_div = document.createElement("div");
+		user_text_div.id = 'user_text'
+
+		var user_desc_div = document.createElement("div");
+		user_desc_div.id = 'user_desc'
+
+		var wrapper = document.createElement("div");
+		wrapper.id = 'wrapper'
+		
+		var btn = document.createElement("BUTTON");
+		
+		var col_tweets_user_div = document.createElement("div");
+		col_tweets_user_div.id = 'col_tweets_user'
+		
+		btn.innerHTML='back'
+
+		document.body.appendChild(supperwrapper);
+
+		supperwrapper.appendChild(top);
+		top.appendChild(btn);
+		supperwrapper.appendChild(col_tweets_user_div);
+		supperwrapper.appendChild(user_stats_div);
+		user_stats_div.appendChild(user_svg_div);
+
+		user_stats_div.appendChild(user_text_div);
+		
+		d3.json(filenode, function(error, data) {
+					if (error) throw error;
+
+			d3.json(filelink, function(error2, datalink){
+					if (error2) throw error2;
+				
+				d3.json(fileuser, function(error3, metadata){
+						if (error3) throw error3;		
+						
+				array_score = get_array_score(data,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)
+				
+				for (var j = 0; j < array_score.length; j++) {
+					array_score[j].value_tot = array_score[j].value_pic+array_score[j].value_geo+array_score[j].value_pop+array_score[j].value_text+0.1
+					}
+					
+				user_data = array_score.filter(function(d){return d.id== user_id})
+				user_metadata = metadata.filter(function(d){return d.id== user_id})
+				
+				cluster_data = array_score.filter(function(d){return d.parentid == user_data[0].parentid})
+				cluster_data = cluster_data.sort(function(d1,d2){return d2.value_tot - d1.value_tot})
+				sum_score_cluster_data= cluster_data.map(function(d){return d.value_tot}).reduce(function (a,b){return a+b})
+				
+
+				datamention_to = datalink
+								.filter(function (d){return d.type == "direct_mentions_tweet"})
+								.filter(function (d){return d.source == user_id})
+								.map(function(d){return parseInt(d.target)})
+
+				datamention_from = datalink
+								.filter(function (d){return d.type == "direct_mentions_tweet"})
+								.filter(function (d){return d.target == user_id})
+								.map(function(d){return parseInt(d.source)})
+
+				dataweb_to = datalink
+								.filter(function (d){return d.type == "direct_web_tweet"})
+								.filter(function (d){return d.source == user_id})
+								.map(function(d){return parseInt(d.target)})
+
+				dataweb_from = datalink
+								.filter(function (d){return d.type == "direct_web_tweet"})
+								.filter(function (d){return d.target == user_id})
+								.map(function(d){return parseInt(d.source)})
+								
+				datamention_to_data = array_score.filter(function(d){return datamention_to.includes(d.id)})
+				datamention_to_data = datamention_to_data.sort(function(d1,d2){return d2.value_tot - d1.value_tot})
+				
+				if (datamention_to_data.length>0){
+					sum_score_datamention_to_data= datamention_to_data.map(function(d){return d.value_tot}).reduce(function (a,b){return a+b})
+				}
+				else{sum_score_datamention_to_data=0}
+
+				datamention_from_data = array_score.filter(function(d){return datamention_from.includes(d.id)})
+				datamention_from_data = datamention_from_data.sort(function(d1,d2){return d2.value_tot - d1.value_tot})
+
+				if (datamention_from_data.length>0){
+					sum_score_datamention_from_data= datamention_from_data.map(function(d){return d.value_tot}).reduce(function (a,b){return a+b})
+				}
+				else{sum_score_datamention_from_data=0}
+				
+				dataweb_to_data = array_score.filter(function(d){return dataweb_to.includes(d.id)})
+				dataweb_to_data = dataweb_to_data.sort(function(d1,d2){return d2.value_tot - d1.value_tot})
+				
+				if (dataweb_to_data.length>0){
+					sum_score_dataweb_to_data= dataweb_to_data.map(function(d){return d.value_tot}).reduce(function (a,b){return a+b})
+				}
+				else{sum_score_dataweb_to_data=0}
+
+				dataweb_from_data = array_score.filter(function(d){return dataweb_from.includes(d.id)})
+				dataweb_from_data = dataweb_from_data.sort(function(d1,d2){return d2.value_tot - d1.value_tot})
+				
+				if (dataweb_from_data.length>0){
+					sum_score_dataweb_from_data= dataweb_from_data.map(function(d){return d.value_tot}).reduce(function (a,b){return a+b})
+				}
+				else{sum_score_dataweb_from_data=0}
+
+				var scale_score_cluster = d3.scaleLog()
+											.domain([0.1, 10000])
+											.range([10, 40]);	
+				
+				user_tweet = user_data.map(function(d){return d.tweet})[0]
+
+				
+				display_list_tweet(user_tweet)
+				
+				var svg = d3.select('#user_svg').append("svg")
+										.attr("height",100)
+										.attr("width",400)
+				
+				user_svg_div.appendChild(user_desc_div);
+
+				svg.append("svg:image")
+				.attr("x",20)
+				.attr("y",30)
+				.attr("height",70)
+				.attr("width",70)
+				.attr("xlink:href",user_metadata[0].profile_image_url)
+
+						
+				svg.append('text')
+				.text(user_data[0].name)
+				.attr("x",20)
+				.attr("y",20)
+				.attr("font-family", "sans-serif")
+				.attr("font-size", "20px")
+					
+				if(user_data[0].id == user_data[0].parentid){
+				
+				d3.select('#user_text').append('p')
+				.style("font-weight","bold")
+				.text(function(){return 'is a '+user_data[0].type+' with '+cluster_data.length+' collaborators :'})
+				.on("click",function(){
+					$("#wrapper").empty()
+					user_stats_div.appendChild(wrapper);
+					$("#wrapper").replaceWith(wrapperClone.clone())
+					hop(cluster_data)
+					display_bar_ind(cluster_data)})    				
+				}
+				
+				else{
+				
+				d3.select('#user_text').append('p')
+				.style("font-weight","bold")
+				.text(function(){return 'is a '+user_data[0].type+' in '+user_data[0].parentname+ ':'})
+				.on("click",function(){
+					$("#wrapper").empty()
+					user_stats_div.appendChild(wrapper);
+					$("#wrapper").replaceWith(wrapperClone.clone())
+					hop(cluster_data)
+					display_bar_ind(cluster_data,'red')})    						
+					
+					}
+					
+				d3.select('#user_text').append('p')
+				.text('mentionned by '+datamention_from_data.length+' users')
+				.style('margin-left','10px')
+				.on("click",function(){
+					$("#wrapper").empty()
+					user_stats_div.appendChild(wrapper);
+					$("#wrapper").replaceWith(wrapperClone.clone())
+					hop(datamention_from_data)
+					display_bar_ind(datamention_from_data,'red')})  
+
+				d3.select('#user_text').append('p')
+				.text('shared by '+dataweb_from_data.length+' users')
+				.style('margin-left','10px')
+				.on("click",function(){
+					$("#wrapper").empty()
+					user_stats_div.appendChild(wrapper);
+					$("#wrapper").replaceWith(wrapperClone.clone())
+					hop(dataweb_from_data)
+					display_bar_ind(dataweb_from_data,'red')})    
+
+				d3.select('#user_text').append('p')
+				.text('who mentions '+datamention_to_data.length+' users')
+				.style('margin-left','10px')
+				.on("click",function(){
+					$("#wrapper").empty()
+					user_stats_div.appendChild(wrapper);
+					$("#wrapper").replaceWith(wrapperClone.clone())
+					hop(datamention_to_data)
+					display_bar_ind(datamention_to_data,'red')})    
+					
+				d3.select('#user_text').append('p')
+				.text('who shares '+dataweb_to_data.length+' users')
+				.style('margin-left','10px')
+				.on("click",function(){
+					$("#wrapper").empty()
+					user_stats_div.appendChild(wrapper);
+					$("#wrapper").replaceWith(wrapperClone.clone())
+					hop(dataweb_to_data)
+					display_bar_ind(dataweb_to_data,'red')})    	
+
+
+				d3.select('#user_desc').append('p')
+				.text(user_metadata[0].description)
+
+				d3.select('#user_desc').append('p')
+				.text(user_metadata[0].location)
+
+			console.log(user_metadata)							
+					  	
+					})
+					
+	
+
+					
+			})
+		})
+
+			btn.onclick = function(){
+						$("body").replaceWith(divClone.clone());
+						hop(data_ori)
+						array_score = get_array_score(data_ori,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)
+						bar_construct2(array_score,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)	
+					}		
+	}
+
+/*
+other functions used
+*/
+
+
+	function findone(haystack, arr) {
+		return arr.some(function (v) {
+			return haystack.indexOf(v) >= 0;
+		});
+	};
+
+	function filter_pic2(d){
+				
+			
+			keep = []
+			if (current_array_pic_coeff[0]!= 0){
+				keep.push('outdoors')}
+			if (current_array_pic_coeff[1]!= 0){
+				keep.push('indoors')}
+			if (current_array_pic_coeff[2]!= 0){
+				keep.push('graph')}
+			if (current_array_pic_coeff[3]!= 0){
+				keep.push('tv')}
+			if (current_array_pic_coeff[4]!= 0){
+				keep.push('other')}			
+			
+			
+		return  keep.includes(d[2]); 
+			}				
+	
+	function filter_vid(d){
+		
+		if (current_vids == false){return d}
+		
+		else{return d[1].indexOf("video") >= 0}
+		
+		}
+	
+	function upd_thres(e){
+		if(e.keyCode ==13){
+			current_threshold = $('#thres')[0].value
+					
+					$('.row_name').remove();
+					$('.row_score').remove();
+					$('.row_type').remove();
+					$('.row_image').remove();
+					$('.row_places').remove();
+					$('.row_button').remove();
+					
+	array_score = get_array_score(data_ori,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)
+	bar_construct2(array_score,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)	
+			}
+		}
+
+	function upd_dataset(e){
+		if(e.keyCode ==13){
+			dataset = $('#dataset')[0].value
+					
+				$('.row_name').remove();
+				$('.row_score').remove();
+				$('.row_type').remove();
+				$('.row_image').remove();
+				$('.row_places').remove();
+				$('.row_button').remove();
+				
+			draw_vis(dataset)
+				}
+		}
+	
+	function gettweet(d,i){	
+		var top = $(document).scrollTop();
+		$('#corps iframe').remove();
+		$('#corps').css("margin-top",top+20)
+		twttr.widgets.createTweet(d[0], document.getElementById('corps'));
+				}
+
+	function back_grey(d,i){
+		if(i%2 ==0){return "#F2F2F2"} else {return "white"} 
+		}
+				
+	function back_grey2(d,i){
+		if(i%2 ==0){return "white"} else {return "#F2F2F2"} 
+		}				
+
+	function display_list_tweet(user_tweet_data){
+		
+		$("#col_tweets_user").empty()
+		
+		d3.select("#col_tweets_user").selectAll("blublublub")
+		.data(user_tweet_data.sort())
+		.enter()
+		.append("div").attr("id",function(d,i){return"div_tweets_"+i})
+		.each(function(d,i){twttr.widgets.createTweet(d[0], document.getElementById("div_tweets_"+i))});
+
+		
+		
+		}
+
+	function display_bar_ind(datafilter, version){
+			
+			name_column = d3.select("#col_name").selectAll("name")
+							.data(datafilter)
+							.enter()
+							.append("div").attr("class","row_name")	
+							.style("background-color",function(d,i){return back_grey(d,i)})
+							.text(function(d){return d.name})
+							.on("click",function(d){
+									display_list_tweet(d.tweet)					
+											})							
+							.on("dblclick",function(d){indiv_display(filenode,d.id)})
+
+				
+			d3.select("#col_type").selectAll("type")
+				.data(datafilter)
+				.enter()
+				.append("div").attr("class","row_type")	
+				.style("background-color",function(d,i){return back_grey(d,i)})			
+				.text(function(d){
+					if ((d.type =='journalist')&&(d.name != d.parentname)){
+							return d.type+"\n"+'@'+d.parentname}
+					
+					if ((d.type =='orguser')&&(d.name != d.parentname)){
+							return d.type+"\n"+'@'+d.parentname}
+
+					if ((d.type =='journal')&&(d.name != d.parentname)){
+							return d.type+"\n"+'@ '+d.parentname}
+					
+					if ((d.type =='orga')&&(d.name != d.parentname)){
+							return d.type+"\n"+'@ '+d.parentname}
+
+					if ((d.type =='other')&&(d.name != d.parentname)){
+							return d.type+"\n"+'@ '+d.parentname}
+							
+					else{return d.type}})	
+				 .on("dblclick",function(d){indiv_display(filenode,d.parentid)})
+	
+				
+			d3.select("#col_score").selectAll("score")
+				.data(datafilter)
+				.enter()
+				.append("div").attr("class","row_score")
+				.style("background-color",function(d,i){return back_grey(d,i)})
+					.append("svg").attr("class","svg_score")
+					
+			d3.selectAll(".svg_score")
+							.append("rect")
+							.attr("width",function(d,i){return d.value_geo})
+							.attr("height",20)
+							.attr("x",0)
+							.attr("y",15)
+							.attr("fill","blue")
+							.append("title").text(function (d) {return parseInt(d.value_geo)})
+			
+			d3.selectAll(".svg_score")
+							.append("rect")
+							.attr("width",function(d,i){return d.value_pic})
+							.attr("height",20)
+							.attr("x",function(d,i){return d.value_geo})
+							.attr("y",15)
+							.attr("fill","orange")
+							.append("title").text(function (d) {return parseInt(d.value_pic)})
+
+			d3.selectAll(".svg_score")
+							.append("rect")
+							.attr("width",function(d,i){return d.value_text})
+							.attr("height",20)
+							.attr("x",function(d,i){return d.value_geo+d.value_pic})
+							.attr("y",15)
+							.attr("fill","black")
+							.append("title").text(function (d) {return parseInt(d.value_text)})
+							
+			d3.selectAll(".svg_score")
+							.append("rect")
+							.attr("width",function(d,i){return d.value_pop})
+							.attr("height",20)
+							.attr("x",function(d,i){return d.value_geo+d.value_pic+d.value_text})
+							.attr("y",15)
+							.attr("fill","green")
+							.append("title").text(function (d) {return parseInt(d.value_pop)})
+					
+			var shw_images = d3.select("#col_image").selectAll("blabla")
+							.data(datafilter)
+							.enter()
+							.append("div")
+							.attr("class","row_image")
+							.style("background-color",function(d,i){return back_grey(d,i)})
+							
+			
+			var slice_img = new Array(datafilter.length).fill(0);
+			var nb_img = new Array(datafilter.length).fill(7);
+						
+					shw_images.selectAll("lala")
+								.data(function(d,i){return d.tweet
+														.map(function(e,j){return e})
+														.filter(function(e,j){return e[1]!='0'})
+														.filter(filter_pic2)
+														.filter(filter_vid)
+														.slice(slice_img[i],slice_img[i]+nb_img[i])
+														})
+								.enter()
+								.append("img")
+									.attr("class","pic")
+									.attr("src",function(z,w){return z[1]})
+									.attr("width",50)
+									.attr("height",50)
+									.attr("x",function(z,w){return w*50})
+									.on("click",gettweet)
+									
+			
+			d3.select("#col_button_img_up").selectAll("buttonup")
+							.data(datafilter)
+							.enter()
+							.append("div")
+							.attr("class","row_button")
+							.style("background-color",function(d,i){return back_grey(d,i)})
+							.append("button")
+							.attr("class","img_but")
+							.style("background-color",function(d,i){return back_grey2(d,i)})
+							.text("next")
+							.on("click",function(d,i){		
+									
+									var data_image = datafilter[i].tweet.map(function(e,j){return e})
+															.filter(function(e,j){return e[1]!='0'})
+															.filter(filter_pic2)
+															.filter(filter_vid)
+															
+									
+									if(slice_img[i]+nb_img[i]< data_image.length){
+									
+									($(".row_image:eq("+i+") img")).remove();
+
+									slice_img[i] = slice_img[i]+nb_img[i]
+									
+									d3.select($(".row_image:eq("+i+")").get(0)).selectAll('aaa')
+									.data(data_image.slice(slice_img[i],slice_img[i]+nb_img[i]))
+										.enter()
+										.append("img")
+										.attr("class","pic")
+										.attr("src",function(z,w){return z[1]})
+										.attr("width",50)
+										.attr("height",50)
+										.attr("x",function(z,w){return w*50})
+										.on("click",gettweet)
+									}
+								})
+							
+
+			d3.select("#col_button_img_back").selectAll("buttonback")
+							.data(datafilter)
+							.enter()
+							.append("div")
+							.attr("class","row_button")
+							.style("background-color",function(d,i){return back_grey(d,i)})
+							.append("button")
+							.attr("class","img_but")
+							.style("background-color",function(d,i){return back_grey2(d,i)})
+							.text("back")
+							.on("click",function(d,i){		
+									
+									if(slice_img[i]-nb_img[i]>-1){
+									
+										($(".row_image:eq("+i+") img")).remove();
+
+										slice_img[i] = slice_img[i]-nb_img[i]
+										
+										d3.select($(".row_image:eq("+i+")").get(0)).selectAll('aaa')
+										.data(datafilter[i].tweet.map(function(e,j){return e})
+																.filter(function(e,j){return e[1]!='0'})
+																.filter(filter_pic2)	
+																.filter(filter_vid)															
+																.slice(slice_img[i],slice_img[i]+nb_img[i]))
+											.enter()
+											.append("img")
+											.attr("class","pic")
+											.attr("src",function(z,w){return z[1]})
+											.attr("width",50)
+											.attr("height",50)
+											.attr("x",function(z,w){return w*50})
+											.on("click",gettweet)
+									}
+								})
+		
+														
+							places = []	
+							places_list=['0','we','us']
+							text_list=''
+							count=0						
+			
+			if (version=='red'){
+				
+				$("#col_places").remove()
+				$("#col_button_places").remove()
+
+				
+				
+				}
+			if (version !='red'){
+				var svg_row_places = d3.select("#col_places").selectAll("places")
+									.data(datafilter)
+									.enter()
+									.append("div").attr("class","row_places")
+									.style("background-color",function(d,i){return back_grey(d,i)})
+										.append("svg")
+										.attr("width",500)
+										.each(function(d,i){return places[i]=[]})
+
+					svg_row_places.selectAll("places2")
+						.data(function(d,i){return [d.tweet
+								.map(function(e){return (e[3])})
+								.filter(function(e){return e[3]!=["0"]})]})
+						.enter()
+						.each
+						(function(d)
+						{ 
+
+							places_list=['0','we','us','https']
+							text_list=''
+							var txt0 = [].concat.apply([], d);
+
+
+							for (var j = 0; j < txt0.length; j++) 
+							{
+									
+									place_name = txt0[j]
+									
+									if ((places_list.includes(place_name.replace(/ /g, '')) == false) && (place_name.length >2))
+									{ 
+										text_list = text_list+place_name+', '
+									}
+									places_list.push(place_name.replace(/ /g, ''))
+
+
+								
+							}
+
+							places[count]=text_list.slice(0,-2)
+							
+							count=count+1
+
+						}
+						)
+						
+	
+			var on_off = new Array(datafilter.length).fill(0);
+
+			d3.select("#col_button_places").selectAll("buttonback")
+							.data(datafilter)
+							.enter()
+							.append("div")
+							.attr("class","row_button")
+							.style("background-color",function(d,i){return back_grey(d,i)})
+							.append("button")
+							.attr("class","places_but")
+							.style("background-color",function(d,i){return back_grey2(d,i)})
+							.text("+")
+							.on("click",function(d,i){
+								
+								var txt = (datafilter[i].tweet.map(function(e){return (e[3])})
+								.filter(function(e){return e!=["0"]}))
+								
+								var txt2 = [].concat.apply([], txt);
+								
+							places_list=['0','we','us','https']
+							text_list2=''
+
+
+							for (var j = 0; j < txt2.length; j++) 
+							{
+									
+									place_name = txt2[j]
+									
+									if ((places_list.includes(place_name.replace(/ /g, '')) == false) && (place_name.length >2))
+									{ 
+										text_list2 = text_list2+place_name+', '
+									}
+									places_list.push(place_name.replace(/ /g, ''))
+
+
+								
+							}
+
+								text_list2 = text_list2.slice(0,-2)
+								alert(text_list2)
+																
+								})
+
+					svg_row_places.append('text').attr('x',10).attr('y',30).text(function(d,i) {return places[i]})										
+
+		
+		}
+	}
+
+/*
+JQUERY function
+*/
+
+
+function hop(current_data){
+$(function () {
+	
+	$("#twitter-widget-0").on('mouseover', function() {
+	  $("#type_dd dd ul").slideToggle('fast');
+	});
+	
+	$("#name_dd dt a").on('click', function() {
+	  $("#name_dd dd ul").slideToggle('fast');
+	});
+
+	$("#name_dd dd ul li a").on('click', function() {
+	  $("#name_dd dd ul").hide();
+	});
+
+	$("#type_dd dt a").on('click', function() {
+	  $("#type_dd dd ul").slideToggle('fast');
+	});
+
+	$("#type_dd dd ul li a").on('click', function() {
+	  $("#type_dd dd ul").hide();
+	});
+
+	$("#score_dd dt a").on('click', function() {
+	  $("#score_dd dd ul").slideToggle('fast');
+	});
+
+	$("#score_dd dd ul li a").on('click', function() {
+	  $("#score_dd dd ul").hide();
+	});
+
+	$("#image_dd dt a").on('click', function() {
+	  $("#image_dd dd ul").slideToggle('fast');
+	});
+
+	$("#image_dd dd ul li a").on('click', function() {
+	  $("#image_dd dd ul").hide();
+	});
+
+	$("#places_dd dt a").on('click', function() {
+	  $("#places_dd dd ul").slideToggle('fast');
+	});
+
+	$("#places_dd dd ul li a").on('click', function() {
+	  $("#places_dd dd ul").hide();
+	});
+	
+	
+	
+	$("#name_dd button").on('click', function(){
+					current_name_tofilter = ($('#name_in')[0]).value.split(",");
+					console.log(current_name_tofilter)
+					
+					$('.row_name').remove();
+					$('.row_score').remove();
+					$('.row_type').remove();
+					$('.row_image').remove();
+					$('.row_places').remove();
+					$('.row_button').remove();
+			
+			if(current_data== undefined){
+				d3.json(filenode, function(error, data) {
+					if (error) throw error;
+					data_ori = data
+					
+					array_score = get_array_score(data_ori,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)
+					bar_construct2(array_score,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)	
+					})	
+					
+				}
+				
+			else{
+					array_score = get_array_score(current_data,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)
+					bar_construct2(array_score,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)	
+
+				}
+		});
+	
+	$("#type_dd button").on('click', function(){
+					current_cluster_tofilter = ($('#clust_in')[0]).value.split(",");
+					current_array_type = []
+					
+					$('#type_dd input:checked').each(function(){
+						var type = $(this)[0];
+						current_array_type.push(type.value);
+						})
+		
+					$('.row_name').remove();
+					$('.row_score').remove();
+					$('.row_type').remove();
+					$('.row_image').remove();
+					$('.row_places').remove();
+					$('.row_button').remove();
+
+			if(current_data== undefined){
+				d3.json(filenode, function(error, data) {
+					if (error) throw error;
+					data_ori = data
+					
+					array_score = get_array_score(data_ori,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)
+					bar_construct2(array_score,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)	
+					})	
+					
+				}
+				
+			else{
+					array_score = get_array_score(current_data,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)
+					bar_construct2(array_score,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)	
+
+				}		
+				
+				});
+
+	$("#score_dd button").on('click', function(){
+		
+					current_array_score = []
+					
+					$('#score_dd input').each(function(){
+						var type = $(this)[0];
+						current_array_score.push(type.value);
+						})
+		
+					$('.row_name').remove();
+					$('.row_score').remove();
+					$('.row_type').remove();
+					$('.row_image').remove();
+					$('.row_places').remove();
+					$('.row_button').remove();
+	
+			if(current_data == undefined){
+				d3.json(filenode, function(error, data) {
+					if (error) throw error;
+					data_ori = data
+					
+					array_score = get_array_score(data_ori,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)
+					bar_construct2(array_score,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)	
+					})	
+					
+				}
+				
+			else{
+					array_score = get_array_score(current_data,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)
+					bar_construct2(array_score,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)	
+
+				}
+				
+						});
+	
+	$("#image_dd button").on('click', function(){
+
+					
+					current_nb_img = ($('#nb_img')[0]).value.split(",");
+					
+					current_array_pic_coeff = []
+
+					current_vids = ($('#vids')).is(":checked")
+					
+					
+					$('#image_dd input').each(function(){
+						
+						if (($(this)).is(":checked")){current_array_pic_coeff.push(1)}
+						
+						else{current_array_pic_coeff.push(0)}
+						})
+
+					$('.row_name').remove();
+					$('.row_score').remove();
+					$('.row_type').remove();
+					$('.row_image').remove();
+					$('.row_places').remove();
+					$('.row_button').remove();
+					
+			if(current_data== undefined){
+				d3.json(filenode, function(error, data) {
+					if (error) throw error;
+					data_ori = data
+					
+					array_score = get_array_score(data_ori,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)
+					bar_construct2(array_score,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)	
+					})	
+					
+				}
+				
+			else{
+					array_score = get_array_score(current_data,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)
+					bar_construct2(array_score,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)	
+
+				}
+				
+						});	
+
+	$("#places_dd button").on('click', function(){
+				current_places_tofilter = ($('#places_dd input')[0]).value.split(",");
+				
+				current_filter_pic_place = ($('#places_f_b')).is(":checked")
+				
+				$('.row_name').remove();
+				$('.row_score').remove();
+				$('.row_type').remove();
+				$('.row_image').remove();
+				$('.row_places').remove();
+				$('.row_button').remove();
+				
+			if(current_data== undefined){
+				d3.json(filenode, function(error, data) {
+					if (error) throw error;
+					data_ori = data
+					
+					array_score = get_array_score(data_ori,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)
+					bar_construct2(array_score,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)	
+					})	
+					
+				}
+				
+			else{
+					array_score = get_array_score(current_data,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)
+					bar_construct2(array_score,current_name_tofilter,current_array_type,current_cluster_tofilter,current_array_score,current_array_pic_coeff,current_nb_img,current_vids,current_threshold,current_places_tofilter,current_filter_pic_place)	
+
+				}				
+		
+		});	
+
+
+
+	$("#places_f_b").prop('checked',true)
+	
+	$("#type_dd input").prop('checked',true)
+	
+	$("#image_dd input").each(function(i){	
+
+		if(current_array_pic_coeff[i]==1){
+			
+			$(this).prop('checked',true)
+			}
+		else{$(this).prop('checked',false)}
+		
+		})
+	
+	$("#score_dd input").each(function(i){
+		$(this).prop('value',current_array_score[i]);
+		})
+
+	$("#thres").prop('value',current_threshold);
+
+	$("#nb_img").prop('value',current_nb_img);
+
+	
+})
+}
+	</script>	
+
+	</body>
+</html>

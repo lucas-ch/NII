@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>D3: Loading GeoJSON data and generating SVG paths</title>
+		<script src="https://d3js.org/d3.v4.min.js"></script>		
+		<style type="text/css">
+			/* No style rules here yet */		
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript">
+			//Width and height
+			var w = 3000;
+			var h = 3000;
+			
+			var projection = d3.geoMercator();
+			//Define default path generator
+			var path = d3.geoPath()
+			                 .projection(projection);;
+			//Create SVG element
+			var svg = d3.select("body")
+						.append("svg")
+						.attr("width", w)
+						.attr("height", h);
+			//Load in GeoJSON data
+			d3.json("output.json", function(json) {
+				
+				//Bind data and create one path per GeoJSON feature
+				svg.selectAll("path")
+				 .data(json.features)
+				.enter()
+				.append("path")
+				.attr("d", path);
+		
+			});
+			
+		d3.json("debbieuserplaces.json", function(places) {
+			svg.selectAll("rect")
+			.data(places)
+			.enter()
+			.append("rect")
+			.attr("x",function(d,i){return(projection([d.feature.geometry.x,d.feature.geometry.y])[0])})
+			.attr("y",function(d,i){return(projection([d.feature.geometry.x,d.feature.geometry.y])[1])})
+			.attr("height",0.5)
+			.attr("width",0.5)
+			.style("fill","red")
+			.on("click", function(d,i){
+				   alert(projection([d.feature.geometry.x,d.feature.geometry.y])[0])}   
+				   );
+
+			});
+						
+		</script>
+	</body>
+</html>

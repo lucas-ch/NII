@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div id="lala"></div>
+<script src="https://d3js.org/d3.v4.min.js"></script>		
+
+</body>
+
+	<script>
+
+	data = [{"activity":4,"vocab":6,"original content":10,"connection":3,"precision":10,"location":10}]
+
+var a1 = 200
+var a2 = 50
+var d2 = 300
+
+angle = Math.PI/3
+
+var d1 = a1
+var l = (d2-a2)/2
+
+var center1 = a1
+var center2 = a2+l
+
+var b1 = a1+l*Math.cos(angle)
+var b2 = a2+l*Math.cos(angle)
+
+var c1 = b1
+var c2 = b2+l
+
+
+var e1 = d1-l*Math.cos(angle)
+var e2 = c2
+
+var f1 = e1
+var f2 = b2
+
+var svg = d3.select("body")
+            .append("svg")
+            .attr("width", 800)   // <-- Here
+            .attr("height", 500); // <-- and here!
+
+	svg.append("polygon")
+		.attr("points",
+		a1.toString()+","+a2.toString()
+		+" "+b1.toString()+","+b2.toString()
+		+" "+c1.toString()+","+c2.toString()
+		+" "+d1.toString()+","+d2.toString()
+		+" "+e1.toString()+","+e2.toString()
+		+" "+f1.toString()+","+f2.toString())
+		.attr("fill","white")
+		.attr("stroke","black")
+		.attr("stroke-width",1)
+
+var dista1 = a1
+var dista2 = center2-data[0]["activity"]/10*l
+
+var distb1 = center1+(data[0]["vocab"]/10*l)*Math.cos(angle)
+var distb2 = center2-(data[0]["vocab"]/10*l)*Math.cos(angle)
+
+var distc1 = center1+(data[0]["original content"]/10*l)*Math.cos(angle)
+var distc2 = center2+(data[0]["original content"]/10*l)*Math.cos(angle)
+
+var distd1 = d1
+var distd2 = center2+(data[0]["connection"]/10*l)
+
+var diste1 = center1-(data[0]["precision"]/10*l)*Math.cos(angle)
+var diste2 = center2+(data[0]["precision"]/10*l)*Math.cos(angle)
+
+var distf1 = center1-(data[0]["location"]/10*l)*Math.cos(angle)
+var distf2 = center2-(data[0]["location"]/10*l)*Math.cos(angle)
+
+	svg.append("polygon")
+		.attr("points",
+		dista1.toString()+","+dista2.toString()
+		+" "+distb1.toString()+","+distb2.toString()
+		+" "+distc1.toString()+","+distc2.toString()
+		+" "+distd1.toString()+","+distd2.toString()
+		+" "+diste1.toString()+","+diste2.toString()
+		+" "+distf1.toString()+","+distf2.toString()
+		)
+		.attr("fill","orange")
+
+	svg.append("text")
+		.attr("x",a1)
+		.attr("y",a2-5)
+		.text("lala")
+
+	svg.append("text")
+		.attr("x",b1)
+		.attr("y",b2)
+		.text("lolo")	
+
+
+	svg.append("text")
+		.attr("x",c1)
+		.attr("y",c2)
+		.text("lolo")	
+
+	svg.append("text")
+		.attr("x",d1)
+		.attr("y",d2+15)
+		.text("lolo")	
+
+	svg.append("text")
+		.attr("x",e1)
+		.attr("y",e2)
+		.text("lolo")	
+		
+	svg.append("text")
+		.attr("x",f1)
+		.attr("y",f2)
+		.text("lolo")	
+		
+		</script>
+
+</html>
